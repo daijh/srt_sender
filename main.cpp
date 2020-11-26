@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 
   int c;
   opterr = 0;
-  while ((c = getopt(argc, argv, "hi:s:")) != -1)
+  while ((c = getopt(argc, argv, "hi:")) != -1)
     switch (c) {
       case 'i':
         i_input_file = optarg;
@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
 
   std::string format = "mpegts";
 
-  int64_t start_pts = AV_NOPTS_VALUE;
+  int64_t output_start_ts = AV_NOPTS_VALUE;
   int64_t output_video_frames = 0;
 
   // open input
@@ -240,13 +240,13 @@ int main(int argc, char** argv) {
         av_rescale_q(pkt.duration, inStream->time_base, outStream->time_base);
     pkt.pos = -1;
 
-    if (start_pts == AV_NOPTS_VALUE) {
-      start_pts = av_gettime_relative();  // us
+    if (output_start_ts == AV_NOPTS_VALUE) {
+      output_start_ts = av_gettime_relative();
     } else {
       int64_t pts = av_rescale_q_rnd(
           pkt.dts, outStream->time_base, AV_TIME_BASE_Q,
           (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
-      int64_t now = av_gettime_relative() - start_pts;
+      int64_t now = av_gettime_relative() - output_start_ts;
 
       if (pts > now)
         usleep(pts - now);
