@@ -13,7 +13,7 @@ install_deps() {
   source /etc/os-release
   if [ $NAME = "Ubuntu" ]; then
     sudo -E apt install -y build-essential cmake wget
-    sudo -E apt install -y libsdl2-dev
+    sudo -E apt install -y yasm libsdl2-dev libx264-dev
   else
     sudo -E yum groupinstall "Development Tools"
     sudo -E yum -y boost-devel wget
@@ -36,11 +36,13 @@ install_yasm() {
 install_srt(){
   cd ${BUILD}
 
-  git clone https://github.com/Haivision/srt.git
+  if [ ! -e srt ];then
+    git clone https://github.com/Haivision/srt.git
+  fi
   cd srt
-  git checkout v1.4.1
+  git reset --hard v1.4.1
 
-  ./configure --prefix=${PREFIX} --enable-shared=1 --enable-static=1
+  ./configure --prefix=${PREFIX} --enable-shared=1 --enable-static=0
   make -j
   make install
 }
@@ -55,12 +57,16 @@ install_ffmpeg(){
 
   cd ${BUILD}
 
-  wget ${SRC_URL}
-  rm -rf ${DIR}
-  tar xf ${SRC}
+  if [ ! -e ${SRC} ];then
+    wget ${SRC_URL}
+  fi
+
+  if [ ! -e ${DIR} ];then
+    tar xf ${SRC}
+  fi
 
   cd ${DIR}
-  ./configure --prefix=${PREFIX} --enable-shared --enable-static --disable-vaapi --enable-gpl --enable-libsrt
+  ./configure --prefix=${PREFIX} --enable-shared --disable-static --disable-vaapi --enable-gpl --enable-libsrt --enable-libx264
 
   make -j
   make install
@@ -70,7 +76,7 @@ mkdir -p ${BUILD}
 
 install_deps
 
-install_yasm
+#install_yasm
 
 install_srt
 install_ffmpeg

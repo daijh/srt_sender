@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 
   int c;
   opterr = 0;
-  while ((c = getopt(argc, argv, "hi:")) != -1)
+  while ((c = getopt(argc, argv, "hi:")) != -1) {
     switch (c) {
       case 'i':
         i_input_file = optarg;
@@ -51,6 +51,7 @@ int main(int argc, char** argv) {
       default:
         usage(argc, argv);
     }
+  }
 
   if (i_input_file.empty()) {
     printf("Invalid parameter, no input file\n");
@@ -72,6 +73,8 @@ int main(int argc, char** argv) {
   } else {
     i_output_url = argv[optind];
   }
+
+  // av_log_set_level(AV_LOG_DEBUG);
 
   int ret;
 
@@ -251,6 +254,11 @@ int main(int argc, char** argv) {
       if (pts > now)
         usleep(pts - now);
     }
+
+    int64_t pts_ms = av_rescale_q_rnd(
+        pkt.pts, outStream->time_base, av_make_q(1, 1000),
+        (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
+    //printf("Write out pts %ld (ms)\n", pts_ms);
 
     ret = av_interleaved_write_frame(outputContext, &pkt);
     if (ret < 0) {
