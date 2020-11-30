@@ -13,10 +13,10 @@ install_deps() {
   source /etc/os-release
   if [ $NAME = "Ubuntu" ]; then
     sudo -E apt install -y build-essential cmake wget
-    sudo -E apt install -y yasm libsdl2-dev libx264-dev
+    sudo -E apt install -y yasm libsdl2-dev libx264-dev libx265-dev
   else
     sudo -E yum groupinstall "Development Tools"
-    sudo -E yum -y boost-devel wget
+    sudo -E yum -y wget
   fi
 }
 
@@ -66,7 +66,7 @@ install_ffmpeg(){
   fi
 
   cd ${DIR}
-  ./configure --prefix=${PREFIX} --enable-shared --disable-static --disable-vaapi --enable-gpl --enable-libsrt --enable-libx264
+  ./configure --prefix=${PREFIX} --enable-shared --disable-static --disable-vaapi --enable-gpl --enable-libsrt --enable-libx264 --enable-libx265
 
   make -j
   make install

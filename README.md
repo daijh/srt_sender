@@ -28,12 +28,17 @@ source ./scripts/setupvars.sh
 # <ip> is local ip, set <port> to 20000 for test
 ./build/srt_sender -i test.mp4  srt://<ip>:<port>?mode=listener
 
+# multiple connections
+./build/srt_sender -i test.mp4  srt://<ip>:<port-1>?mode=listener & \
+./build/srt_sender -i test.mp4  srt://<ip>:<port-2>?mode=listener & \
+./build/srt_sender -i test.mp4  srt://<ip>:<port-3>?mode=listener & \
+./build/srt_sender -i test.mp4  srt://<ip>:<port-4>?mode=listener
 
-# remote
+# remote playback
 # check if srt supported
 ffmpeg -protocols | grep srt
 
-# playback
+# play
 ffplay srt://<ip>:<port>?mode=caller
 ```
 
@@ -44,8 +49,11 @@ B-frames usually are not used for low latency streaming. Only use non-B-frames c
 # check B-frames
 ffprobe -show_frames test.mp4 | grep "pict_type"
 
-# transcode to non B-frames
-ffmpeg -i test.mp4 -acodec copy -vcodec libx264 -x264opts bframes=0:ref=1 non-b-frames-test.mp4
+# transcode to non B-frames h264
+ffmpeg -i test.mp4 -acodec copy -vcodec libx264 -x264opts bframes=0:ref=1 non-b-frames-test-h264.mp4
+
+# transcode to non B-frames hevc
+ffmpeg -i test.mp4 -acodec copy -vcodec libx265 -x265opts bframes=0:ref=1 non-b-frames-test-hevc.mp4
 ```
 
 ## Useful links
