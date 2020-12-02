@@ -1,6 +1,6 @@
 set(target_name srt_sender)
 
-ADD_DEFINITIONS("-g -c -fPIC -std=c++11 -Wno-attributes")
+ADD_DEFINITIONS("-g -c -fPIC -std=c++17 -Wno-attributes")
 
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/deps/release/include")
 LINK_DIRECTORIES("${PROJECT_SOURCE_DIR}/deps/release/lib")
