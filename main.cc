@@ -247,9 +247,9 @@ int main(int argc, char** argv) {
       if (pts > now) usleep(pts - now);
     }
 
-    int64_t pts_ms = av_rescale_q_rnd(
-        pkt.pts, out_stream->time_base, av_make_q(1, 1000),
-        (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
+    //int64_t pts_ms = av_rescale_q_rnd(
+    //    pkt.pts, out_stream->time_base, av_make_q(1, 1000),
+    //    (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
     // printf("Write out pts %ld (ms)\n", pts_ms);
 
     ret = av_interleaved_write_frame(output_context, &pkt);

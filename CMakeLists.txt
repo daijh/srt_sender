@@ -1,6 +1,9 @@
+cmake_minimum_required (VERSION 3.10)
+project(Samples)
+
 set(target_name srt_sender)
 
-ADD_DEFINITIONS("-g -c -fPIC -std=c++17 -Wno-attributes")
+ADD_DEFINITIONS("-g -c -fPIC -std=c++17 -Wall -Wno-attributes")
 
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/deps/release/include")
 LINK_DIRECTORIES("${PROJECT_SOURCE_DIR}/deps/release/lib")
